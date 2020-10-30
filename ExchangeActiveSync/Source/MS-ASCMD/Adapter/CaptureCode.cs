@@ -675,6 +675,17 @@ namespace Microsoft.Protocols.TestSuites.MS_ASCMD
         }
 
         /// <summary>
+        /// Verify Forwardee element for Sync responses.
+        /// </summary>
+        /// <param name="forwardee">The ForwardeesForwardee element.</param>
+        private void VerifyForwardeeElementForSyncResponses(ForwardeesForwardee forwardee)
+        {
+            if (forwardee != null)
+            {
+            }
+        }
+
+        /// <summary>
         /// Verify child elements for Responses element in Sync command.
         /// </summary>
         /// <param name="element">The xml string of Response element.</param>
@@ -7188,24 +7199,25 @@ namespace Microsoft.Protocols.TestSuites.MS_ASCMD
                 #endregion
 
                 #region Capture code for Result
-                //foreach (FindResponseResult result in findResponse.ResponseData.Response.Result)
-                //{
-                    FindResponseResult result = findResponse.ResponseData.Response.Result;
-                    if (result!= null)
+                if (findResponse.ResponseData.Response.Results != null)
+                {
+                    foreach (FindResponseResult result in findResponse.ResponseData.Response.Results)
                     {
-                        #region Capture code for Class
-                        //findResponse.ResponseData.Response.Result.Class
-                        #endregion
+                        if (result != null)
+                        {
+                            #region Capture code for Class
+                            //findResponse.ResponseData.Response.Result.Class
+                            #endregion
 
-                        #region Capture code for CollectionId
-                        //findResponse.ResponseData.Response.Result.CollectionId
-                        #endregion
+                            #region Capture code for CollectionId
+                            //findResponse.ResponseData.Response.Result.CollectionId
+                            #endregion
 
-                        #region Capture code for ServerId
-                        //findResponse.ResponseData.Response.Result.ServerId
-                        #endregion
-         
-                        #region Capture code for Properties
+                            #region Capture code for ServerId
+                            //findResponse.ResponseData.Response.Result.ServerId
+                            #endregion
+
+                            #region Capture code for Properties
                             //findResponse.ResponseData.Response.Result.Properties
                             if (result.Properties != null)
                             {
@@ -7360,9 +7372,11 @@ namespace Microsoft.Protocols.TestSuites.MS_ASCMD
                                 }
                             }
                             #endregion
-                   
+
+                        }
                     }
-                //}
+                }
+                
                 #endregion
 
                 #region Capture code for Range
@@ -9347,6 +9361,22 @@ OofMessage (section 2.2.3.117)");
                                             Site.Assert.IsNotNull(add.ApplicationData, "The ApplicationData element in Sync command should not be null.");
 
                                             this.VerifyApplicationDataForSyncAddChange();
+                                            for (int i = 0; i < add.ApplicationData.ItemsElementName.Length; i++)
+                                            {
+                                                if (add.ApplicationData.ItemsElementName[i].ToString()=="MeetingRequst")
+                                                {
+                                                    if (add.ApplicationData.Items[i]!=null)
+                                                    {
+                                                        if (((MeetingRequest)add.ApplicationData.Items[i]).Forwardees!= null)
+                                                        {
+                                                            foreach (ForwardeesForwardee forwardee in ((MeetingRequest)add.ApplicationData.Items[i]).Forwardees)
+                                                            {
+                                                              VerifyForwardeeElementForSyncResponses(forwardee);                                                                
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            } 
                                         }
                                     }
                                     #endregion
@@ -9397,6 +9427,22 @@ OofMessage (section 2.2.3.117)");
                                             Site.Assert.IsNotNull(change.ApplicationData, "The ApplicationData element in Sync command should not be null.");
 
                                             this.VerifyApplicationDataForSyncAddChange();
+                                            for (int i = 0; i < change.ApplicationData.ItemsElementName.Length; i++)
+                                            {
+                                                if (change.ApplicationData.ItemsElementName[i].ToString() == "MeetingRequst")
+                                                {
+                                                    if (change.ApplicationData.Items[i] != null)
+                                                    {
+                                                        if (((MeetingRequest)change.ApplicationData.Items[i]).Forwardees != null)
+                                                        {
+                                                            foreach (ForwardeesForwardee forwardee in ((MeetingRequest)change.ApplicationData.Items[i]).Forwardees)
+                                                            {
+                                                                VerifyForwardeeElementForSyncResponses(forwardee);
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
                                         }
                                     }
                                     #endregion
